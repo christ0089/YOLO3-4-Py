@@ -5,7 +5,7 @@ import cv2
 
 if __name__ == "__main__":
 
-    net = Detector(bytes("cfg/yolov3.cfg", encoding="utf-8"), bytes("weights/yolov3.weights", encoding="utf-8"), 0,
+    net = Detector(bytes("cfg/yolov3.cfg", encoding="utf-8"), bytes("weights/yolov3-tiny.weights", encoding="utf-8"), 0,
                    bytes("cfg/coco.data", encoding="utf-8"))
 
     cap = cv2.VideoCapture(0)
@@ -13,11 +13,15 @@ if __name__ == "__main__":
     while True:
         r, frame = cap.read()
         if r:
+            
+            
+            frame = imutils.resize(frame, width = 1000)
+            image = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
             start_time = time.time()
 
             # Only measure the time taken by YOLO and API Call overhead
 
-            dark_frame = Image(frame)
+            dark_frame = Image(image)
             results = net.detect(dark_frame)
             del dark_frame
 
@@ -31,6 +35,4 @@ if __name__ == "__main__":
 
             cv2.imshow("preview", frame)
 
-        k = cv2.waitKey(1)
-        if k == 0xFF & ord("q"):
-            break
+
